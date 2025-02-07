@@ -8,3 +8,8 @@ dependencies = [
     "ipykernel>=6.29.5",
     "tensorflow>=2.18.0",
 ]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=6.29.5",
+]
