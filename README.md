@@ -16,6 +16,12 @@ uv sync
 uv add <lib>
 ```
 
+## Create Jupyter kernel
+
+```bash
+uv run ipython kernel install --user --env VIRTUAL_ENV $(pwd)/.venv --name=project
+```
+
 ## Launch file
 
 ```bash
