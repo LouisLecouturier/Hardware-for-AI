@@ -1,3 +1,30 @@
+# Metrics
+
+## Par batch
+
+-   Temps
+-   Loss
+-   Consommation electrique
+-   Utilisation memoire
+-   Utilisation CPU
+-   Temperature
+
+## Global
+
+-   Somme temps
+-   Best loss
+-   Somme consommation electrique
+-   Moyenne utilisation memoire
+-   Moyenne utilisation CPU
+-   Moyenne temperature
+-   Temps d'inference (TODO)
+
+## Autre (à voir)
+
+Accuracy/précision
+Vitesse de convergence
+Stabilité de l'entraînement
+
 # Installation
 
 ```bash
