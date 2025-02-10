@@ -2,7 +2,14 @@ import time
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPool2D
+from tensorflow.keras.layers import (
+    BatchNormalization,
+    Conv2D,
+    Dense,
+    Dropout,
+    Flatten,
+    MaxPool2D,
+)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.optimizers import Adam
 
@@ -16,17 +23,17 @@ def train_model(model, trainX, trainY, epochs, metrics_collector):
             trainX,
             trainY,
             epochs=1,
-            batch_size=64,
+            batch_size=1024,
         )
 
         batch_time = time.time() - start_time
 
         print(f"Batch time: {batch_time}")
         metrics_collector.collect_training_metrics(
-            batch_time=batch_time,
-            loss=history.history["loss"][-1],
-            epoch=epoch
+            batch_time=batch_time, loss=history.history["loss"][-1], epoch=epoch
         )
+
+    return model
 
 
 def prepare_data():
@@ -56,11 +63,13 @@ def create_model():
             Conv2D(
                 32, (5, 5), padding="same", activation="relu", input_shape=input_shape
             ),
+            BatchNormalization(),
             Conv2D(32, (5, 5), padding="same", activation="relu"),
             MaxPool2D(),
             Dropout(0.2),
             #
             Conv2D(64, (3, 3), padding="same", activation="relu"),
+            BatchNormalization(),
             Conv2D(64, (3, 3), padding="same", activation="relu"),
             MaxPool2D(strides=(2, 2)),
             Dropout(0.2),
@@ -68,6 +77,7 @@ def create_model():
             Flatten(),
             #
             Dense(128, activation="relu"),
+            BatchNormalization(),
             Dropout(0.5),
             #
             Dense(num_classes, activation="softmax"),

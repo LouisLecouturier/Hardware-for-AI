@@ -25,7 +25,7 @@ def main():
         )  # Setup metrics collector
         train_model(model, trainX, trainY, NUM_EPOCHS, metrics_collector)
         metrics_collector.export_metrics()  # Export metrics
-        
+        metrics_collector.save_inference_time("rnn", model, testX)
 
 if __name__ == "__main__":
     main()

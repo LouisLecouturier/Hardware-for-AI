@@ -1,11 +1,12 @@
+import os
 import subprocess
 import time
+import uuid
 from datetime import datetime
 
 import pandas as pd
 import psutil
-import os
-import uuid
+
 
 class MetricsCollector:
     def __init__(self, device, model, mac_model):
@@ -79,12 +80,29 @@ class MetricsCollector:
             print(e)
             return None
 
-    @staticmethod
-    def get_inference_time(model, x):
+    def save_inference_time(self, task, model, x):
         """Gets the inference time of a model on a given input"""
         start_time = time.time()
         model.predict(x)
-        return time.time() - start_time
+        inference_time = (time.time() - start_time) * 1000
+
+        df = pd.DataFrame(
+            {
+                "mac_model": [self.mac_model],
+                "device": [self.device],
+                "inference_time_ms": [inference_time],
+            }
+        )
+
+        file_path = f"exports/inference/inference_{task}_{self.device}.csv"
+
+        # Vérifier si le fichier existe
+        if os.path.exists(file_path):
+            # Ajouter sans l'en-tête
+            df.to_csv(file_path, mode="a", header=False, index=False)
+        else:
+            # Créer nouveau fichier avec l'en-tête
+            df.to_csv(file_path, index=False)
 
     def collect_system_metrics(self):
         self.metrics["timestamp"].append(datetime.now())
@@ -100,18 +118,21 @@ class MetricsCollector:
         self.metrics["loss"].append(loss)
         self.metrics["epoch"].append(epoch)
 
-
     def export_metrics(self):
         metrics_to_export = {k: v for k, v in self.metrics.items() if len(v) > 0}
         df = pd.DataFrame(metrics_to_export)
         df["training_uuid"] = self.training_uuid
-        
+
         file_path = f"exports/metrics_{self.model}_{self.device}_{self.mac_model}.csv"
 
         # Vérifier si le fichier existe
         if os.path.exists(file_path):
             # Ajouter sans l'en-tête
-            df.to_csv(file_path, mode='a', header=False, index=False)
+            df.to_csv(file_path, mode="a", header=False, index=False)
         else:
             # Créer nouveau fichier avec l'en-tête
+            df.to_csv(file_path, index=False)
+            df.to_csv(file_path, index=False)
+            df.to_csv(file_path, index=False)
+            df.to_csv(file_path, index=False)
             df.to_csv(file_path, index=False)
