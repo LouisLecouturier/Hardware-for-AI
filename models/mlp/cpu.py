@@ -7,9 +7,15 @@ import tensorflow as tf
 from models.mlp.functions import create_model, prepare_data, train_model
 from utils.config import MAC_MODEL, NUM_EPOCHS, print_current_device, NUM_EXPERIMENTS
 from utils.metrics import MetricsCollector
+def setup():
+    tf.random.set_seed(7)  # fix random seed for reproducibility
+    tf.config.set_visible_devices([], "GPU")  # Désactive le GPU
+    print_current_device(tf)
+
 
 
 def main():
+    setup()
     for _ in range(NUM_EXPERIMENTS):
         trainX, trainY, testX, testY = prepare_data()
         model = create_model()
@@ -21,7 +27,4 @@ def main():
 
 
 if __name__ == "__main__":
-    tf.random.set_seed(7)  # fix random seed for reproducibility
-    tf.config.set_visible_devices([], "GPU")  # Désactive le GPU
-    print_current_device()
     main()
