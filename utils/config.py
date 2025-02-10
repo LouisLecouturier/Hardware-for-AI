@@ -8,6 +8,7 @@ load_dotenv(".config")
 
 NUM_EPOCHS = int(os.getenv("NUM_EPOCHS", 10))
 MAC_MODEL = os.getenv("MAC_MODEL", "M1")
+NUM_EXPERIMENTS = int(os.getenv("NUM_EXPERIMENTS", 3))
 
 
 def select_gpu():

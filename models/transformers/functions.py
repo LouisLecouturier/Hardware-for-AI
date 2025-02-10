@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import MinMaxScaler
-from tensorflow.keras.layers import LSTM, Dense
 from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Input, MultiHeadAttention, LayerNormalization, GlobalAveragePooling1D
+
 
 
 def train_model(model, trainX, trainY, epochs, metrics_collector):
@@ -22,7 +23,7 @@ def train_model(model, trainX, trainY, epochs, metrics_collector):
         metrics_collector.collect_training_metrics(
             batch_time=batch_time,
             loss=history.history["loss"][-1],
-            epoch=epoch,
+            epoch=epoch
         )
 
 
@@ -53,7 +54,7 @@ def prepare_data():
         return np.array(dataX), np.array(dataY)
 
     # reshape into X=t and Y=t+1
-    look_back = 1
+    look_back = 10
     trainX, trainY = create_dataset(train, look_back)
     testX, testY = create_dataset(test, look_back)
 
@@ -63,15 +64,53 @@ def prepare_data():
 
     return trainX, trainY, testX, testY, scaler, dataset, look_back
 
+def create_transformer_block(inputs, head_size, num_heads, ff_dim, dropout=0):
+    # Attention multi-têtes
+    attention_output = MultiHeadAttention(
+        num_heads=num_heads, key_dim=head_size
+    )(inputs, inputs)
+    
+    # Add & Normalize
+    attention_output = LayerNormalization(epsilon=1e-6)(inputs + attention_output)
+    
+    # Feed-forward
+    outputs = Dense(ff_dim, activation="relu")(attention_output)
+    outputs = Dense(inputs.shape[-1])(outputs)
+    
+    # Add & Normalize
+    outputs = LayerNormalization(epsilon=1e-6)(attention_output + outputs)
+    return outputs
 
-def create_model(look_back):
 
-    # create LSTM network
-    model = Sequential()
-    model.add(LSTM(4, input_shape=(1, look_back)))
-    model.add(Dense(1))
 
-    model.compile(loss="mean_squared_error", optimizer="adam")
+def create_model(look_back, tf):
+    # Paramètres du Transformer
+    head_size = 256
+    num_heads = 4
+    ff_dim = 4
+    
+    # Input
+    inputs = Input(shape=(1, look_back))
+    
+    # Transformer block
+    transformer_block = create_transformer_block(
+        inputs, head_size, num_heads, ff_dim
+    )
+    
+    # Global pooling
+    x = GlobalAveragePooling1D()(transformer_block)
+    
+    # Output
+    outputs = Dense(1)(x)
+    
+    # Création du modèle
+    model = tf.keras.Model(inputs=inputs, outputs=outputs)
+    
+    model.compile(
+        loss='mean_squared_error',
+        optimizer='adam'
+    )
+    
     return model
 
 

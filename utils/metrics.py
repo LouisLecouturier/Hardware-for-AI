@@ -4,13 +4,15 @@ from datetime import datetime
 
 import pandas as pd
 import psutil
-
+import os
+import uuid
 
 class MetricsCollector:
     def __init__(self, device, model, mac_model):
         self.model = model
         self.mac_model = mac_model
         self.device = device
+        self.training_uuid = uuid.uuid4()
         self.metrics = {
             "timestamp": [],
             "memory_usage": [],
@@ -20,6 +22,7 @@ class MetricsCollector:
             "batch_time": [],
             "loss": [],
             "power_consumption": [],
+            "epoch": [],
         }
 
     @staticmethod
@@ -92,16 +95,23 @@ class MetricsCollector:
         self.metrics["temperature"].append(self.get_temperature())
         self.metrics["power_consumption"].append(self.get_power_consumption())
 
-    def collect_training_metrics(self, batch_time, loss):
+    def collect_training_metrics(self, batch_time, loss, epoch):
         self.metrics["batch_time"].append(batch_time)
         self.metrics["loss"].append(loss)
+        self.metrics["epoch"].append(epoch)
+
 
     def export_metrics(self):
         metrics_to_export = {k: v for k, v in self.metrics.items() if len(v) > 0}
         df = pd.DataFrame(metrics_to_export)
-        print(df)
-        df.to_csv(
-            f"exports/metrics_{self.model}_{self.device}_{self.mac_model}.csv",
-            mode="a",
-            index=False,
-        )
+        df["training_uuid"] = self.training_uuid
+        
+        file_path = f"exports/metrics_{self.model}_{self.device}_{self.mac_model}.csv"
+
+        # Vérifier si le fichier existe
+        if os.path.exists(file_path):
+            # Ajouter sans l'en-tête
+            df.to_csv(file_path, mode='a', header=False, index=False)
+        else:
+            # Créer nouveau fichier avec l'en-tête
+            df.to_csv(file_path, index=False)

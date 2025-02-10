@@ -8,7 +8,7 @@ from tensorflow.keras.optimizers import Adam
 
 
 def train_model(model, trainX, trainY, epochs, metrics_collector):
-    for _ in range(epochs):
+    for epoch in range(epochs):
         start_time = time.time()
         metrics_collector.collect_system_metrics()
 
@@ -25,6 +25,7 @@ def train_model(model, trainX, trainY, epochs, metrics_collector):
         metrics_collector.collect_training_metrics(
             batch_time=batch_time,
             loss=history.history["loss"][-1],
+            epoch=epoch
         )
 
 
