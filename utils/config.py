@@ -1,7 +1,6 @@
 import os
 
 import matplotlib.pyplot as plt
-import tensorflow as tf
 from dotenv import load_dotenv
 
 load_dotenv(".config")
@@ -11,7 +10,7 @@ MAC_MODEL = os.getenv("MAC_MODEL", "M1")
 NUM_EXPERIMENTS = int(os.getenv("NUM_EXPERIMENTS", 3))
 
 
-def select_gpu():
+def select_gpu(tf):
     try:
         if len(tf.config.list_physical_devices("GPU")) > 0:
             # Utiliser with pour créer le contexte
@@ -28,7 +27,7 @@ def select_gpu():
             return False
 
 
-def print_current_device():
+def print_current_device(tf):
     # Obtenir tous les devices disponibles
     devices = tf.config.list_physical_devices()
     print("Devices disponibles:", devices)

@@ -14,8 +14,15 @@ from utils.config import (
 )
 from utils.metrics import MetricsCollector
 
+def setup():
+    tf.random.set_seed(7)  # fix random seed for reproducibility
+    select_gpu(tf)
+    print_current_device(tf)
+
+
 
 def main():
+    setup()
     for _ in range(NUM_EXPERIMENTS):
         trainX, trainY, testX, testY = prepare_data()
         model = create_model()
@@ -28,7 +35,4 @@ def main():
 
 
 if __name__ == "__main__":
-    tf.random.set_seed(7)  # fix random seed for reproducibility
-    select_gpu()
-    print_current_device()
     main()
