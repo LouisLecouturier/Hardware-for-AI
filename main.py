@@ -4,14 +4,14 @@ import os
 def run_all_models():
     # Liste des modèles à exécuter
     models = [
-        'models.transformers.cpu',
-        'models.rnn.cpu',
-        'models.cnn.cpu',
-        'models.mlp.cpu',
-        # 'models.transformers.gpu',
-        # 'models.rnn.gpu',
-        # 'models.cnn.gpu',
-        # 'models.mlp.gpu',
+        # 'models.transformers.cpu',
+        # 'models.rnn.cpu',
+        # 'models.cnn.cpu',
+        # 'models.mlp.cpu',
+        'models.transformers.gpu',
+        'models.rnn.gpu',
+        'models.cnn.gpu',
+        'models.mlp.gpu',
     ]
     
     # Exécuter chaque modèle
