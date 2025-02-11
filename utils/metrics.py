@@ -41,7 +41,6 @@ class MetricsCollector:
         try:
             # Utilisation de powermetrics via subprocess
             cmd = [
-                "sudo",
                 "powermetrics",
                 "-n",
                 "1",
