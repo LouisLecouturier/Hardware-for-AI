@@ -93,7 +93,7 @@ class MetricsCollector:
             }
         )
 
-        file_path = f"exports/inference/inference_{task}_{self.device}.csv"
+        file_path = f"exports/inference/inference_{task}_{self.device}_{self.mac_model}.csv"
 
         # Vérifier si le fichier existe
         if os.path.exists(file_path):
