@@ -17,7 +17,7 @@ def train_model(model, trainX, trainY, epochs, metrics_collector):
             trainY,
             epochs=1,
             batch_size=1,
-            verbose=2
+            verbose=1
         )
 
         batch_time = time.time() - start_time
