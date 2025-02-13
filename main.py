@@ -8,9 +8,9 @@ def run_all_models():
         # 'models.rnn.cpu',
         # 'models.cnn.cpu',
         # 'models.mlp.cpu',
-        'models.transformers.gpu',
-        'models.rnn.gpu',
-        'models.cnn.gpu',
+        # 'models.transformers.gpu',
+        # 'models.rnn.gpu',
+        # 'models.cnn.gpu',
         'models.mlp.gpu',
     ]
     
