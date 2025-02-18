@@ -40,7 +40,7 @@ uv sync
 ## Add libs
 
 ```bash
-uv add <lib>
+sudo uv add <lib>
 ```
 
 ## Create Jupyter kernel
